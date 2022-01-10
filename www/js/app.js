@@ -1,5 +1,8 @@
 
-        function openCamera() { 
+        function openCamera(text) { 
+            if(text == "scan"){
+                console.log('yo got that right')
+            }
                 console.log('hello');
                cordova.plugins.barcodeScanner.scan(
                     function (result) {
@@ -39,20 +42,44 @@
     // https://world.openfoodfacts.org/api/v0/product/7622210449283.json
      
     $("#card *:not(div)").remove();
-    $.getJSON("https://world.openfoodfacts.org/api/v0/product/" + codeBare+".json", 
+    //https://world.openfoodfacts.org/api/v0/product/7622210449283.json?fields=product_name,quantity
+    $.getJSON("https://world.openfoodfacts.org/api/v0/product/" + codeBare+".json?fields=product_name,quantity,ingredients_text,image_url", 
     function(result) { 
     var codeBAR = result.code; 
-    // var weatherType = result.weather[0].main; 
-    // var iconCode = result.weather[0].icon; 
-    // var temp = result.main.temp; 
-    // var tempInCelsius = (temp - 273.15).toFixed(1); 
+    var quantite = result.product["ingredients_text"];
+    var image = result.product["image_url"];
+
 
     cardSelector.append('<form>');
-    cardSelector.append("<ul><li>Ville :<b> " + codeBAR + "</b></li>");
-    // cardSelector.append("<img src='img/m" + iconCode + ".png' alt='Weather Icon' width='80px' height='80px'>");
+    cardSelector.append("<ul><li>Code bar :<b> " + codeBAR + "</b></li>");
+    cardSelector.append("<ul><li>Qantité :<b> " + quantite + "</b></li>");
+    cardSelector.append("<ul><li>Image :<br><img src='"+ image +"' alt='Weather Icon' width='80px' height='80px'></li>");
     cardSelector.append('<a class="waves-effect waves-light btn" style="margin: 0px;" href="/informations.html" id="showMore">Voir plus</a>');
     cardSelector.append('</form>')
 });
 
 
   }
+
+
+  function findProduct(){
+    var myValue = $('input').val(); 
+    $("#card *:not(div)").remove();
+    // https://world.openfoodfacts.org/category/pizzas.json?fields=product_name
+    $.getJSON("https://world.openfoodfacts.org/api/v0/category/" + myValue + ".json?fields=product_name", 
+    function(result) { 
+    var codeBAR = result.code; 
+    var quantite = result.product["ingredients_text"];
+    var image = result.product["image_url"];
+
+
+    cardSelector.append('<form>');
+    cardSelector.append("<ul><li>Code bar :<b> " + codeBAR + "</b></li>");
+    // cardSelector.append("<ul><li>Qantité :<b> " + quantite + "</b></li>");
+    // cardSelector.append("<ul><li>Image :<br><img src='"+ image +"' alt='Weather Icon' width='80px' height='80px'></li>");
+    cardSelector.append('</form>')
+});
+
+
+
+}
